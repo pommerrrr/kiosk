@@ -1,0 +1,27 @@
+{
+  "name": "sistema-centro-custo",
+  "version": "2.0.0",
+  "description": "Sistema de Gerenciamento de Centro de Custo - Interface web para controle de custos e lucros por centro",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seu-usuario/sistema-centro-custo-github.git"
+  },
+  "keywords": [
+    "centro-de-custo",
+    "gestao-financeira",
+    "controle-custos",
+    "dashboard",
+    "empresa",
+    "financeiro"
+  ],
+  "author": "Sistema Centro de Custo",
+  "license": "MIT",
+  "homepage": "https://seu-usuario.github.io/sistema-centro-custo-github/",
+  "dependencies": {},
+  "devDependencies": {}
+}
