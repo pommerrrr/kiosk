@@ -558,9 +558,10 @@
                                     <input type="text" x-model="purchase.category" 
                                            class="flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500" 
                                            placeholder="Categoria">
-                                    <input type="number" x-model="purchase.value" 
+                                    <input type="number" x-model.number="purchase.value" 
                                            class="w-24 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500" 
-                                           placeholder="Valor">
+                                           placeholder="Valor" 
+                                           @input="purchase.value = parseFloat($event.target.value) || 0">
                                     <button @click="editingCenter.purchases.splice(index, 1)" 
                                             class="text-red-600 hover:text-red-800">
                                         <i class="fas fa-trash"></i>
@@ -583,9 +584,10 @@
                                     <input type="text" x-model="cost.description" 
                                            class="flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500" 
                                            placeholder="Descrição">
-                                    <input type="number" x-model="cost.value" 
+                                    <input type="number" x-model.number="cost.value" 
                                            class="w-24 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500" 
-                                           placeholder="Valor">
+                                           placeholder="Valor" 
+                                           @input="cost.value = parseFloat($event.target.value) || 0">
                                     <button @click="editingCenter.fixedCosts.splice(index, 1)" 
                                             class="text-red-600 hover:text-red-800">
                                         <i class="fas fa-trash"></i>
@@ -608,9 +610,10 @@
                                     <input type="text" x-model="sale.description" 
                                            class="flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500" 
                                            placeholder="Produto">
-                                    <input type="number" x-model="sale.value" 
+                                    <input type="number" x-model.number="sale.value" 
                                            class="w-24 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500" 
-                                           placeholder="Valor">
+                                           placeholder="Valor" 
+                                           @input="sale.value = parseFloat($event.target.value) || 0">
                                     <button @click="editingCenter.sales.splice(index, 1)" 
                                             class="text-red-600 hover:text-red-800">
                                         <i class="fas fa-trash"></i>
@@ -833,6 +836,38 @@
                 
                 history: [],
                 
+                // Data Normalization
+                normalizeData() {
+                    // Normalize cost centers
+                    this.costCenters.forEach(center => {
+                        if (center.purchases) {
+                            center.purchases.forEach(purchase => {
+                                purchase.value = parseFloat(purchase.value) || 0;
+                            });
+                        }
+                        if (center.fixedCosts) {
+                            center.fixedCosts.forEach(cost => {
+                                cost.value = parseFloat(cost.value) || 0;
+                            });
+                        }
+                        if (center.sales) {
+                            center.sales.forEach(sale => {
+                                sale.value = parseFloat(sale.value) || 0;
+                            });
+                        }
+                    });
+                    
+                    // Normalize employees
+                    this.employees.forEach(employee => {
+                        employee.salary = parseFloat(employee.salary) || 0;
+                        if (employee.distribution) {
+                            Object.keys(employee.distribution).forEach(key => {
+                                employee.distribution[key] = parseFloat(employee.distribution[key]) || 0;
+                            });
+                        }
+                    });
+                },
+
                 // Firebase Methods
                 async saveToFirebase() {
                     if (!window.firebaseReady || !window.firebaseDb) return;
@@ -898,6 +933,7 @@
                             const data = docSnap.data();
                             this.costCenters = data.costCenters || this.costCenters;
                             this.employees = data.employees || this.employees;
+                            this.normalizeData(); // Normalize data after loading
                             console.log('✅ Dados carregados do Firebase');
                         } else {
                             console.log('📝 Nenhum dado encontrado no Firebase, usando dados padrão');
@@ -965,7 +1001,7 @@
                 // Calculation Methods
                 getTotalSales() {
                     return this.costCenters.reduce((total, center) => 
-                        total + center.sales.reduce((sum, sale) => sum + (sale.value || 0), 0), 0);
+                        total + center.sales.reduce((sum, sale) => sum + (parseFloat(sale.value) || 0), 0), 0);
                 },
                 
                 getTotalCosts() {
@@ -974,16 +1010,16 @@
 
                 getTotalPurchases() {
                     return this.costCenters.reduce((total, center) => 
-                        total + center.purchases.reduce((sum, purchase) => sum + (purchase.value || 0), 0), 0);
+                        total + center.purchases.reduce((sum, purchase) => sum + (parseFloat(purchase.value) || 0), 0), 0);
                 },
 
                 getTotalFixedCosts() {
                     return this.costCenters.reduce((total, center) => 
-                        total + center.fixedCosts.reduce((sum, cost) => sum + (cost.value || 0), 0), 0);
+                        total + center.fixedCosts.reduce((sum, cost) => sum + (parseFloat(cost.value) || 0), 0), 0);
                 },
                 
                 getTotalLaborCost() {
-                    return this.employees.reduce((total, emp) => total + (emp.salary || 0), 0);
+                    return this.employees.reduce((total, emp) => total + (parseFloat(emp.salary) || 0), 0);
                 },
                 
                 getProfit() {
@@ -992,20 +1028,20 @@
                 
                 // Center-specific calculations
                 getCenterSales(center) {
-                    return center.sales.reduce((sum, sale) => sum + (sale.value || 0), 0);
+                    return center.sales.reduce((sum, sale) => sum + (parseFloat(sale.value) || 0), 0);
                 },
                 
                 getCenterPurchases(center) {
-                    return center.purchases.reduce((sum, purchase) => sum + (purchase.value || 0), 0);
+                    return center.purchases.reduce((sum, purchase) => sum + (parseFloat(purchase.value) || 0), 0);
                 },
                 
                 getCenterFixedCosts(center) {
-                    return center.fixedCosts.reduce((sum, cost) => sum + (cost.value || 0), 0);
+                    return center.fixedCosts.reduce((sum, cost) => sum + (parseFloat(cost.value) || 0), 0);
                 },
                 
                 getCenterLaborCost(center) {
                     return this.employees.reduce((total, emp) => 
-                        total + ((emp.salary || 0) * (emp.distribution[center.id] || 0) / 100), 0);
+                        total + ((parseFloat(emp.salary) || 0) * (parseFloat(emp.distribution[center.id]) || 0) / 100), 0);
                 },
                 
                 getCenterTotalCosts(center) {
@@ -1033,7 +1069,7 @@
 
                 getTotalEmployeePercentage(employee) {
                     if (!employee) return 0;
-                    return Object.values(employee.distribution).reduce((sum, percent) => sum + (percent || 0), 0);
+                    return Object.values(employee.distribution).reduce((sum, percent) => sum + (parseFloat(percent) || 0), 0);
                 },
                 
                 // CRUD Operations
@@ -1047,6 +1083,7 @@
                     if (index !== -1) {
                         this.costCenters[index] = this.editingCenter;
                     }
+                    this.normalizeData(); // Normalize before saving
                     this.showCenterModal = false;
                     await this.saveToFirebase();
                 },
@@ -1168,6 +1205,7 @@
                         const data = JSON.parse(stored);
                         this.costCenters = data.costCenters || this.costCenters;
                         this.employees = data.employees || this.employees;
+                        this.normalizeData(); // Normalize data after loading
                     }
                     
                     // Load history from localStorage
@@ -1180,6 +1218,9 @@
                 // Initialization
                 async init() {
                     console.log('🚀 Inicializando sistema...');
+                    
+                    // Normalize initial data
+                    this.normalizeData();
                     
                     if (window.firebaseReady) {
                         await this.loadFromFirebase();
