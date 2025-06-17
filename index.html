@@ -1135,7 +1135,18 @@
                 },
                 
                 getCenterFixedCosts(center) {
-                    return center.fixedCosts.reduce((sum, cost) => sum + (parseFloat(cost.value) || 0), 0);
+                    // Custos fixos locais do centro (agora removidos, mas mantemos para compatibilidade)
+                    const localFixedCosts = center.fixedCosts ? 
+                        center.fixedCosts.reduce((sum, cost) => sum + (parseFloat(cost.value) || 0), 0) : 0;
+                    
+                    // Custos fixos globais distribuídos para este centro
+                    const globalFixedCosts = this.fixedCosts ? 
+                        this.fixedCosts.reduce((sum, cost) => {
+                            const percentage = cost.distribution ? (cost.distribution[center.id] || 0) : 0;
+                            return sum + ((parseFloat(cost.value) || 0) * percentage / 100);
+                        }, 0) : 0;
+                    
+                    return localFixedCosts + globalFixedCosts;
                 },
                 
                 getCenterLaborCost(center) {
