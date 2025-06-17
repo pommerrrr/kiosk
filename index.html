@@ -122,13 +122,6 @@
                     <i class="fas fa-users mr-2"></i>Funcionários
                 </button>
                 <button 
-                    @click="currentView = 'fixedCosts'" 
-                    :class="currentView === 'fixedCosts' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
-                    class="px-4 py-2 rounded-lg font-medium transition-colors"
-                >
-                    <i class="fas fa-cogs mr-2"></i>Custos Fixos
-                </button>
-                <button 
                     @click="currentView = 'history'" 
                     :class="currentView === 'history' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
                     class="px-4 py-2 rounded-lg font-medium transition-colors"
@@ -324,13 +317,6 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h2 class="text-2xl font-bold">Funcionários</h2>
-                </button>
-                <button 
-                    @click="currentView = 'fixedCosts'" 
-                    :class="currentView === 'fixedCosts' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
-                    class="px-4 py-2 rounded-lg font-medium transition-colors"
-                >
-                    <i class="fas fa-cogs mr-2"></i>Custos Fixos
                     <p class="text-gray-600">Gerencie salários e distribuição por centro de custo</p>
                 </div>
                 <button @click="addEmployee()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
@@ -344,13 +330,6 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600">Total Funcionários</p>
-                </button>
-                <button 
-                    @click="currentView = 'fixedCosts'" 
-                    :class="currentView === 'fixedCosts' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
-                    class="px-4 py-2 rounded-lg font-medium transition-colors"
-                >
-                    <i class="fas fa-cogs mr-2"></i>Custos Fixos
                             <p class="text-2xl font-bold text-blue-600" x-text="employees.length"></p>
                         </div>
                         <i class="fas fa-users text-blue-600 text-2xl"></i>
@@ -425,106 +404,6 @@
                                     <span class="text-sm font-bold" 
                                           :class="getTotalEmployeePercentage(employee) === 100 ? 'text-green-600' : 'text-red-600'"
                                           x-text="getTotalEmployeePercentage(employee) + '%'"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </div>
-        </div>
-
-        <!-- Fixed Costs View -->
-        <div x-show="currentView === 'fixedCosts'" class="space-y-6">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-2xl font-bold">Custos Fixos</h2>
-                    <p class="text-gray-600">Gerencie custos fixos e distribuição por centro de custo</p>
-                </div>
-                <button @click="addFixedCost()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                    <i class="fas fa-plus mr-2"></i>Adicionar
-                </button>
-            </div>
-
-            <!-- Summary Card -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600">Total de Custos</p>
-                            <p class="text-2xl font-bold text-orange-600" x-text="fixedCosts.length"></p>
-                        </div>
-                        <i class="fas fa-cogs text-orange-600 text-2xl"></i>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600">Valor Total</p>
-                            <p class="text-2xl font-bold text-green-600" x-text="formatCurrency(getTotalFixedCosts())"></p>
-                        </div>
-                        <i class="fas fa-dollar-sign text-green-600 text-2xl"></i>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600">Valor Médio</p>
-                            <p class="text-2xl font-bold text-gray-700" 
-                               x-text="formatCurrency(fixedCosts.length > 0 ? getTotalFixedCosts() / fixedCosts.length : 0)"></p>
-                        </div>
-                        <i class="fas fa-chart-bar text-gray-700 text-2xl"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <template x-for="(cost, index) in fixedCosts" :key="index">
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h3 class="text-lg font-semibold" x-text="cost.name"></h3>
-                                <span class="text-sm text-gray-600" x-text="formatCurrency(cost.value)"></span>
-                            </div>
-                            <div class="flex space-x-2">
-                                <button @click="editFixedCostDistribution(index)" 
-                                        class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-200">
-                                    <i class="fas fa-percentage mr-1"></i>Distribuição
-                                </button>
-                                <button @click="editFixedCost(index)" 
-                                        class="bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-200">
-                                    <i class="fas fa-edit mr-1"></i>Editar
-                                </button>
-                                <button @click="removeFixedCost(index)" 
-                                        class="bg-red-100 text-red-700 px-3 py-1 rounded text-sm hover:bg-red-200">
-                                    <i class="fas fa-trash mr-1"></i>Remover
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-3">
-                            <h4 class="font-medium text-sm text-gray-700">Distribuição por Centro:</h4>
-                            <template x-for="center in costCenters" :key="center.id">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center">
-                                        <div class="h-3 w-3 rounded-full mr-2" 
-                                             :style="'background-color: ' + getCenterColor(center.id)"></div>
-                                        <span class="text-sm" x-text="center.name"></span>
-                                    </div>
-                                    <div class="flex items-center space-x-2">
-                                        <span class="text-sm font-medium" x-text="cost.distribution[center.id] + '%'"></span>
-                                        <span class="text-xs text-gray-500" 
-                                              x-text="formatCurrency(cost.value * cost.distribution[center.id] / 100)"></span>
-                                    </div>
-                                </div>
-                            </template>
-                            
-                            <!-- Total Validation -->
-                            <div class="pt-2 border-t">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm font-medium">Total:</span>
-                                    <span class="text-sm font-bold" 
-                                          :class="getTotalFixedCostPercentage(cost) === 100 ? 'text-green-600' : 'text-red-600'"
-                                          x-text="getTotalFixedCostPercentage(cost) + '%'"></span>
                                 </div>
                             </div>
                         </div>
@@ -696,6 +575,32 @@
                         </div>
                     </div>
                     
+                    <!-- Custos Fixos -->
+                    <div>
+                        <h4 class="font-semibold mb-3">Custos Fixos</h4>
+                        <div class="space-y-2">
+                            <template x-for="(cost, index) in editingCenter.fixedCosts" :key="index">
+                                <div class="flex items-center space-x-2">
+                                    <input type="text" x-model="cost.description" 
+                                           class="flex-1 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500" 
+                                           placeholder="Descrição">
+                                    <input type="number" x-model.number="cost.value" 
+                                           class="w-24 px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500" 
+                                           placeholder="Valor" 
+                                           @input="cost.value = parseFloat($event.target.value) || 0">
+                                    <button @click="editingCenter.fixedCosts.splice(index, 1)" 
+                                            class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </template>
+                            <button @click="editingCenter.fixedCosts.push({description: '', value: 0})" 
+                                    class="w-full py-2 border-2 border-dashed border-gray-300 rounded text-gray-600 hover:border-gray-400">
+                                <i class="fas fa-plus mr-2"></i>Adicionar
+                            </button>
+                        </div>
+                    </div>
+                    
                     <!-- Vendas -->
                     <div>
                         <h4 class="font-semibold mb-3">Vendas</h4>
@@ -823,92 +728,6 @@
         </div>
     </div>
 
-        <!-- Fixed Cost Distribution Modal -->
-        <div x-show="showFixedCostModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" 
-             @click.self="showFixedCostModal = false">
-            <div class="bg-white rounded-lg max-w-2xl w-full p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold">
-                        Editar Distribuição - <span x-text="editingFixedCost?.name || ''"></span>
-                    </h3>
-                    <button @click="showFixedCostModal = false" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                </div>
-                
-                <div x-show="editingFixedCost" class="space-y-6">
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <div class="flex justify-between items-center">
-                            <span class="font-medium">Valor Total:</span>
-                            <span class="text-lg font-bold text-orange-600" 
-                                  x-text="formatCurrency(editingFixedCost?.value || 0)"></span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <h4 class="font-semibold">Distribuição Percentual por Centro:</h4>
-                        <template x-for="center in costCenters" :key="center.id">
-                            <div class="bg-white border rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-3">
-                                    <div class="flex items-center">
-                                        <div class="h-4 w-4 rounded-full mr-3" 
-                                             :style="'background-color: ' + getCenterColor(center.id)"></div>
-                                        <span class="font-medium" x-text="center.name"></span>
-                                    </div>
-                                    <div class="flex items-center space-x-3">
-                                        <input type="range" 
-                                               :value="editingFixedCost?.distribution[center.id] || 0"
-                                               @input="updateFixedCostDistribution(center.id, parseInt($event.target.value))"
-                                               min="0" max="100" 
-                                               class="w-32">
-                                        <div class="w-20">
-                                            <input type="number" 
-                                                   :value="editingFixedCost?.distribution[center.id] || 0"
-                                                   @input="updateFixedCostDistribution(center.id, parseInt($event.target.value))"
-                                                   min="0" max="100" 
-                                                   class="w-full px-2 py-1 border rounded text-center">
-                                        </div>
-                                        <span class="text-sm">%</span>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-gray-600">Valor Alocado:</span>
-                                    <span class="font-medium text-orange-600" 
-                                          x-text="formatCurrency((editingFixedCost?.value || 0) * (editingFixedCost?.distribution[center.id] || 0) / 100)"></span>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <div class="flex justify-between items-center">
-                            <span class="font-medium">Total da Distribuição:</span>
-                            <span class="text-lg font-bold" 
-                                  :class="getTotalFixedCostPercentage(editingFixedCost) === 100 ? 'text-green-600' : 'text-red-600'"
-                                  x-text="getTotalFixedCostPercentage(editingFixedCost) + '%'"></span>
-                        </div>
-                        <p class="text-sm text-gray-600 mt-1" 
-                           x-show="getTotalFixedCostPercentage(editingFixedCost) !== 100">
-                            A soma deve ser exatamente 100%
-                        </p>
-                    </div>
-
-                    <div class="flex space-x-4">
-                        <button @click="saveFixedCostDistribution()" 
-                                :disabled="getTotalFixedCostPercentage(editingFixedCost) !== 100"
-                                :class="getTotalFixedCostPercentage(editingFixedCost) === 100 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'"
-                                class="flex-1 text-white px-6 py-2 rounded transition-colors">
-                            Salvar Distribuição
-                        </button>
-                        <button @click="showFixedCostModal = false" 
-                                class="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400 transition-colors">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     <script>
         function costManagement() {
             return {
@@ -920,9 +739,6 @@
                 editingCenter: null,
                 editingEmployeeDistribution: null,
                 editingEmployeeIndex: null,
-                showFixedCostModal: false,
-                editingFixedCost: null,
-                editingFixedCostIndex: null,
                 firebaseStatus: 'disconnected',
                 
                 // Data
@@ -935,18 +751,11 @@
                             { category: 'GERAIS', value: 5000 },
                             { category: 'HORTIFRUTI', value: 2000 }
                         ],
-
-                fixedCosts: [
-                ],
                         fixedCosts: [
-                ],
                             { description: 'ÁGUA', value: 500 },
                             { description: 'ENERGIA', value: 800 },
                             { description: 'EMBALAGENS', value: 50 }
                         ],
-
-                fixedCosts: [
-                ],
                         sales: [
                             { description: 'X', value: 25000 },
                             { description: 'Y', value: 100 },
@@ -961,18 +770,11 @@
                             { category: 'GERAIS', value: 5000 },
                             { category: 'HORTIFRUTI', value: 2000 }
                         ],
-
-                fixedCosts: [
-                ],
                         fixedCosts: [
-                ],
                             { description: 'ÁGUA', value: 500 },
                             { description: 'ENERGIA', value: 800 },
                             { description: 'EMBALAGENS', value: 20 }
                         ],
-
-                fixedCosts: [
-                ],
                         sales: [
                             { description: 'X', value: 22000 },
                             { description: 'Y', value: 100 },
@@ -987,18 +789,11 @@
                             { category: 'GERAIS', value: 5000 },
                             { category: 'HORTIFRUTI', value: 2000 }
                         ],
-
-                fixedCosts: [
-                ],
                         fixedCosts: [
-                ],
                             { description: 'ÁGUA', value: 500 },
                             { description: 'ENERGIA', value: 800 },
                             { description: 'EMBALAGENS', value: 10 }
                         ],
-
-                fixedCosts: [
-                ],
                         sales: [
                             { description: 'X', value: 12000 },
                             { description: 'Y', value: 100 },
@@ -1013,27 +808,17 @@
                             { category: 'GERAIS', value: 5000 },
                             { category: 'HORTIFRUTI', value: 2000 }
                         ],
-
-                fixedCosts: [
-                ],
                         fixedCosts: [
-                ],
                             { description: 'ÁGUA', value: 500 },
                             { description: 'ENERGIA', value: 800 },
                             { description: 'EMBALAGENS', value: 15 }
                         ],
-
-                fixedCosts: [
-                ],
                         sales: [
                             { description: 'X', value: 35000 },
                             { description: 'Y', value: 100 },
                             { description: 'Z', value: 50 }
                         ]
                     }
-                ],
-
-                fixedCosts: [
                 ],
                 
                 employees: [
@@ -1048,14 +833,8 @@
                         distribution: { emporio: 25, salgado: 25, cafe: 25, restaurante: 25 }
                     }
                 ],
-
-                fixedCosts: [
-                ],
                 
                 history: [],
-
-                fixedCosts: [
-                ],
                 
                 // Data Normalization
                 normalizeData() {
@@ -1065,55 +844,15 @@
                             center.purchases.forEach(purchase => {
                                 purchase.value = parseFloat(purchase.value) || 0;
                             });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
                         }
                         if (center.fixedCosts) {
                             center.fixedCosts.forEach(cost => {
                                 cost.value = parseFloat(cost.value) || 0;
                             });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
                         }
                         if (center.sales) {
                             center.sales.forEach(sale => {
                                 sale.value = parseFloat(sale.value) || 0;
-                            });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
-                        }
-                    });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
                             });
                         }
                     });
@@ -1124,26 +863,6 @@
                         if (employee.distribution) {
                             Object.keys(employee.distribution).forEach(key => {
                                 employee.distribution[key] = parseFloat(employee.distribution[key]) || 0;
-                            });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
-                        }
-                    });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
                             });
                         }
                     });
@@ -1159,7 +878,6 @@
                         const data = {
                             costCenters: this.costCenters,
                             employees: this.employees,
-                            fixedCosts: this.fixedCosts,
                             lastUpdated: new Date().toISOString()
                         };
                         
@@ -1215,8 +933,6 @@
                             const data = docSnap.data();
                             this.costCenters = data.costCenters || this.costCenters;
                             this.employees = data.employees || this.employees;
-                        this.fixedCosts = data.fixedCosts || this.fixedCosts;
-                            this.fixedCosts = data.fixedCosts || this.fixedCosts;
                             this.normalizeData(); // Normalize data after loading
                             console.log('✅ Dados carregados do Firebase');
                         } else {
@@ -1257,23 +973,11 @@
                                 if (data.lastUpdated && new Date(data.lastUpdated) > new Date(this.lastUpdated || 0)) {
                                     this.costCenters = data.costCenters || this.costCenters;
                                     this.employees = data.employees || this.employees;
-                        this.fixedCosts = data.fixedCosts || this.fixedCosts;
-                            this.fixedCosts = data.fixedCosts || this.fixedCosts;
                                     this.lastUpdated = data.lastUpdated;
                                     console.log('🔄 Dados sincronizados em tempo real');
                                 }
                             }
                         });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
                         
                         console.log('🔗 Sincronização em tempo real ativada');
                         
@@ -1292,16 +996,6 @@
                 
                 getCurrentMonth() {
                     return new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
                 },
                 
                 // Calculation Methods
@@ -1320,7 +1014,8 @@
                 },
 
                 getTotalFixedCosts() {
-                    return this.fixedCosts.reduce((total, cost) => total + (parseFloat(cost.value) || 0), 0);
+                    return this.costCenters.reduce((total, center) => 
+                        total + center.fixedCosts.reduce((sum, cost) => sum + (parseFloat(cost.value) || 0), 0), 0);
                 },
                 
                 getTotalLaborCost() {
@@ -1341,8 +1036,7 @@
                 },
                 
                 getCenterFixedCosts(center) {
-                    return this.fixedCosts.reduce((total, cost) => 
-                        total + ((parseFloat(cost.value) || 0) * (parseFloat(cost.distribution[center.id]) || 0) / 100), 0);
+                    return center.fixedCosts.reduce((sum, cost) => sum + (parseFloat(cost.value) || 0), 0);
                 },
                 
                 getCenterLaborCost(center) {
@@ -1403,16 +1097,6 @@
                             salary,
                             distribution: { emporio: 25, salgado: 25, cafe: 25, restaurante: 25 }
                         });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
                         this.saveToFirebase();
                     }
                 },
@@ -1467,16 +1151,6 @@
                             };
                         });
 
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
-
                         const record = {
                             id: Date.now(),
                             period: this.getCurrentMonth(),
@@ -1511,16 +1185,6 @@
                                 { description: 'Z', value: 0 }
                             ];
                         });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
                         
                         await this.saveToFirebase();
                         alert('Mês fechado com sucesso!');
@@ -1532,7 +1196,6 @@
                     localStorage.setItem('costManagementData', JSON.stringify({
                         costCenters: this.costCenters,
                         employees: this.employees
-                        fixedCosts: this.fixedCosts
                     }));
                 },
                 
@@ -1542,8 +1205,6 @@
                         const data = JSON.parse(stored);
                         this.costCenters = data.costCenters || this.costCenters;
                         this.employees = data.employees || this.employees;
-                        this.fixedCosts = data.fixedCosts || this.fixedCosts;
-                            this.fixedCosts = data.fixedCosts || this.fixedCosts;
                         this.normalizeData(); // Normalize data after loading
                     }
                     
@@ -1554,72 +1215,6 @@
                     }
                 },
                 
-                // Fixed Costs Management
-                addFixedCost() {
-                    const name = prompt("Nome do custo fixo:");
-                    const value = parseFloat(prompt("Valor total:") || "0");
-                    if (name && value > 0) {
-                        this.fixedCosts.push({
-                            name,
-                            value,
-                            distribution: { emporio: 25, salgado: 25, cafe: 25, restaurante: 25 }
-                        });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
-                        this.saveToFirebase();
-                    }
-                },
-                
-                async editFixedCost(index) {
-                    const cost = this.fixedCosts[index];
-                    const newValue = parseFloat(prompt("Novo valor:", cost.value) || cost.value);
-                    cost.value = newValue;
-                    await this.saveToFirebase();
-                },
-                
-                editFixedCostDistribution(index) {
-                    this.editingFixedCostIndex = index;
-                    this.editingFixedCost = JSON.parse(JSON.stringify(this.fixedCosts[index]));
-                    this.showFixedCostModal = true;
-                },
-
-                updateFixedCostDistribution(centerId, percentage) {
-                    if (this.editingFixedCost) {
-                        this.editingFixedCost.distribution[centerId] = Math.max(0, Math.min(100, percentage || 0));
-                    }
-                },
-
-                async saveFixedCostDistribution() {
-                    if (this.editingFixedCostIndex !== null && this.getTotalFixedCostPercentage(this.editingFixedCost) === 100) {
-                        this.fixedCosts[this.editingFixedCostIndex] = this.editingFixedCost;
-                        this.showFixedCostModal = false;
-                        this.editingFixedCost = null;
-                        this.editingFixedCostIndex = null;
-                        await this.saveToFirebase();
-                    }
-                },
-
-                async removeFixedCost(index) {
-                    if (confirm("Remover custo fixo?")) {
-                        this.fixedCosts.splice(index, 1);
-                        await this.saveToFirebase();
-                    }
-                },
-
-                getTotalFixedCostPercentage(cost) {
-                    if (!cost) return 0;
-                    return Object.values(cost.distribution).reduce((sum, percent) => sum + (parseFloat(percent) || 0), 0);
-                },
-                
-
                 // Initialization
                 async init() {
                     console.log('🚀 Inicializando sistema...');
@@ -1637,16 +1232,6 @@
                             await this.loadFromFirebase();
                             this.setupFirebaseSync();
                         });
-
-                    // Normalize fixed costs
-                    this.fixedCosts.forEach(cost => {
-                        cost.value = parseFloat(cost.value) || 0;
-                        if (cost.distribution) {
-                            Object.keys(cost.distribution).forEach(key => {
-                                cost.distribution[key] = parseFloat(cost.distribution[key]) || 0;
-                            });
-                        }
-                    });
                         
                         // Load from localStorage as fallback
                         this.loadFromStorage();
